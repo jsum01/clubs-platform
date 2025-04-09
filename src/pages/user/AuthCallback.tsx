@@ -46,7 +46,11 @@ const AuthCallback: React.FC = () => {
         
         // 로컬 스토리지에 토큰과 사용자 정보 저장
         localStorage.setItem('club_platform_token', userData.token);
+        // DEBUG
+        console.log("LocalStorage(club_platform_token)\n", userData.token)
         localStorage.setItem('club_platform_user', JSON.stringify(userData.user));
+        // DEBUG
+        console.log("LocalStorage(club_platform_user)\n", userData.token)
         
         // 성공 시 메인 페이지로 리디렉션
         navigate('/', { replace: true });
@@ -76,7 +80,7 @@ const AuthCallback: React.FC = () => {
           </>
         ) : (
           <>
-            <CardTitle>로그인 처리 중</CardTitle>
+            <CardTitle>요청을 처리하고 있습니다!</CardTitle>
             <LoadingSpinner />
             <LoadingText>잠시만 기다려주세요...</LoadingText>
           </>
