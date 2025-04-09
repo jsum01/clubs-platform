@@ -25,15 +25,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   const location = useLocation();
 
-  if (!isLoggedIn) {
-    // 로그인하지 않은 경우 로그인 페이지로 리디렉션
+  if (!isLoggedIn) // 로그인하지 않은 경우 로그인 페이지로 리디렉션
     return <Navigate to="/login" state={{ from: location }} replace />;
-  }
 
-  if (adminOnly && !isAdmin) {
-    // 관리자 전용 페이지에 일반 사용자가 접근한 경우
+  if (adminOnly && !isAdmin) // 관리자 전용 페이지에 일반 사용자가 접근한 경우
     return <Navigate to="/" replace />;
-  }
 
   return <>{children}</>;
 };
