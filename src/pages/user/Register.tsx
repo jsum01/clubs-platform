@@ -13,11 +13,9 @@ const Register: React.FC = () => {
       
       // 구글 회원가입일 경우
       if (provider === 'google') {
-        // 실제로는 Google OAuth 클라이언트 ID가 필요합니다
-        const clientId = 'your-google-client-id';
+        const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID; console.log("clientId: " + clientId)
         const redirectUri = `${window.location.origin}/oauth/callback/google`; // 콜백 URL 설정
-        // 요청할 권한 범위
-        const scope = 'email profile';
+        const scope = 'email profile'; // 요청할 권한 범위
         // CSRF 방지용 상태 토큰
         const state = Math.random().toString(36).substring(2);
         localStorage.setItem('oauth_state', state);
@@ -29,14 +27,12 @@ const Register: React.FC = () => {
       } 
       // 카카오 회원가입일 경우
       else if (provider === 'kakao') {
-        // 카카오 로그인은 REST API 키 필요
-        const restApiKey = 'your-kakao-rest-api-key';
-        // 콜백 URL 설정
+        const restApiKey = process.env.REACT_APP_KAKAO_REST_API_KEY; console.log("KAKAO_REST_API_KEY: " + restApiKey)
         const redirectUri = `${window.location.origin}/oauth/callback/kakao`;
         // CSRF 방지용 상태 토큰
         const state = Math.random().toString(36).substring(2);
         localStorage.setItem('oauth_state', state);
-        // 회원가입임을 나타내는 파라미터 추가
+        // 회원가입임을 나타내는 파라미터
         localStorage.setItem('oauth_signup', 'true');
         // 카카오 OAuth 로그인 페이지로 리다이렉트
         const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${restApiKey}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&state=${state}`;
