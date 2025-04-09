@@ -27,47 +27,29 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       setSuccess(message);
     }
   }, [location]);
-
+  
   const handleOAuthLogin = async (provider: string) => {
     try {
       setLoading(true);
-      
       // 구글 로그인일 경우
       if (provider === 'google') {
-        // 실제로는 Google OAuth 클라이언트 ID가 필요합니다
-        const clientId = 'your-google-client-id';
-        
-        // 콜백 URL 설정
-        const redirectUri = `${window.location.origin}/oauth/callback/google`;
-        
-        // 요청할 권한 범위
-        const scope = 'email profile';
-        
-        // CSRF 방지용 상태 토큰
-        const state = Math.random().toString(36).substring(2);
+        const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID; console.log("clientId: " + clientId)
+        const redirectUri = `${window.location.origin}/oauth/callback/google`; // 콜백 URL
+        const responseType = 'token'
+        const scope = 'email profile'; // 요청할 권한 범위
+        const state = Math.random().toString(36).substring(2); // CSRF 방지용 상태 토큰
         localStorage.setItem('oauth_state', state);
-        
-        // 구글 OAuth 로그인 페이지로 리다이렉트
-        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}&state=${state}&prompt=select_account`;
-        
-        window.location.href = googleAuthUrl;
+        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=${responseType}&scope=${encodeURIComponent(scope)}`;
+        window.location.href = googleAuthUrl; // 구글 OAuth 로그인 페이지로 리다이렉트
       } 
       // 카카오 로그인일 경우
       else if (provider === 'kakao') {
-        // 카카오 로그인은 REST API 키 필요
-        const restApiKey = 'your-kakao-rest-api-key';
-        
-        // 콜백 URL 설정
-        const redirectUri = `${window.location.origin}/oauth/callback/kakao`;
-        
-        // CSRF 방지용 상태 토큰
-        const state = Math.random().toString(36).substring(2);
+        const restApiKey = process.env.REACT_APP_KAKAO_REST_API_KEY; console.log("KAKAO_REST_API_KEY: " + restApiKey)
+        const redirectUri = `${window.location.origin}/oauth/callback/kakao`;// 콜백 URL
+        const state = Math.random().toString(36).substring(2); // CSRF 방지용 상태 토큰
         localStorage.setItem('oauth_state', state);
-        
-        // 카카오 OAuth 로그인 페이지로 리다이렉트
         const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${restApiKey}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&state=${state}`;
-        
-        window.location.href = kakaoAuthUrl;
+        window.location.href = kakaoAuthUrl; // 카카오 OAuth 로그인 페이지로 리다이렉트
       }
     } catch (err: any) {
       setError(err.message || `${provider} 로그인 중 오류가 발생했습니다.`);
