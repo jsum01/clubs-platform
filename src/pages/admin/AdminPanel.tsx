@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ClubManagement from './ClubManagement';
 import MemberManagement from './MemberManagement';
 import EventManagement from './EventManagement';
-import UserAnnouncements from '../user/UserAnnouncements';
+import UserAnnouncements from '../user/UserPosts';
 
 const AdminPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState('clubs');

@@ -40,20 +40,20 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // 로컬 스토리지에서 로그인 상태 확인
     const token = localStorage.getItem('club_platform_token');
     if (token) {
       setIsLoggedIn(true);
-      
-      // 관리자 여부 확인 (실제로는 토큰에서 역할 정보를 추출해야 함)
+  
       const userJson = localStorage.getItem('club_platform_user');
       if (userJson) {
         const user = JSON.parse(userJson);
         setIsAdmin(user.role === 'ADMIN');
       }
+  
+      console.log('Login Status: true');
+    } else {
+      console.log('Login Status: false');
     }
-    
-    console.log(`Login Status: ${isLoggedIn}`);
   }, []);
 
   // 로그인 처리

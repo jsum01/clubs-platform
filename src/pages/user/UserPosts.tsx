@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-interface Announcement {
+interface Post {
   id: number;
   title: string;
   content: string;
@@ -12,7 +12,7 @@ interface Announcement {
   important: boolean;
 }
 
-interface UserAnnouncementsProps {
+interface UserPostsProps {
   clubId: number;
 }
 
@@ -47,7 +47,7 @@ const FilterButton = styled.button<{ active: boolean }>`
   }
 `;
 
-const AnnouncementCard = styled.div<{ important: boolean }>`
+const PostCard = styled.div<{ important: boolean }>`
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -56,15 +56,15 @@ const AnnouncementCard = styled.div<{ important: boolean }>`
   border-left: ${props => props.important ? '4px solid #f56565' : 'none'};
 `;
 
-const AnnouncementHeader = styled.div`
+const PostHeader = styled.div`
   margin-bottom: 1rem;
 `;
 
-const AnnouncementTitle = styled.h3`
+const PostTitle = styled.h3`
   margin: 0 0 0.5rem 0;
 `;
 
-const AnnouncementMeta = styled.div`
+const PostMeta = styled.div`
   display: flex;
   justify-content: space-between;
   color: #718096;
@@ -80,11 +80,11 @@ const ImportantBadge = styled.span`
   margin-left: 0.5rem;
 `;
 
-const AnnouncementBody = styled.div`
+const PostBody = styled.div`
   line-height: 1.6;
 `;
 
-const AnnouncementText = styled.p`
+const PostText = styled.p`
   margin: 0;
   white-space: pre-line;
 `;
@@ -103,17 +103,17 @@ const LoadingIndicator = styled.div`
   color: #718096;
 `;
 
-const UserAnnouncements: React.FC<UserAnnouncementsProps> = ({ clubId }) => {
-  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+const UserPosts: React.FC<UserPostsProps> = ({ clubId }) => {
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all'); // 'all', 'important', 'regular'
 
-  // In a real app, you would fetch announcements from an API
+  // In a real app, you would fetch posts from an API
   useEffect(() => {
     // Simulate API call with setTimeout
     setTimeout(() => {
       // Mock data - this would come from your API
-      const mockAnnouncements = [
+      const mockPosts = [
         { 
           id: 1, 
           title: 'Photography Exhibition Next Month', 
@@ -146,15 +146,15 @@ const UserAnnouncements: React.FC<UserAnnouncementsProps> = ({ clubId }) => {
         },
       ];
       
-      setAnnouncements(mockAnnouncements);
+      setPosts(mockPosts);
       setLoading(false);
     }, 800);
   }, [clubId]);
 
-  const filteredAnnouncements = announcements.filter(announcement => {
+  const filteredPosts = posts.filter(post => {
     if (filter === 'all') return true;
-    if (filter === 'important') return announcement.important;
-    if (filter === 'regular') return !announcement.important;
+    if (filter === 'important') return post.important;
+    if (filter === 'regular') return !post.important;
     return true;
   });
 
@@ -188,33 +188,33 @@ const UserAnnouncements: React.FC<UserAnnouncementsProps> = ({ clubId }) => {
         </FilterControls>
       </PageHeader>
 
-      {filteredAnnouncements.length === 0 ? (
+      {filteredPosts.length === 0 ? (
         <EmptyState>
           <p>공지사항이 없습니다.</p>
         </EmptyState>
       ) : (
-        filteredAnnouncements.map(announcement => (
-          <AnnouncementCard 
-            key={announcement.id} 
-            important={announcement.important}
+        filteredPosts.map(post => (
+          <PostCard 
+            key={post.id} 
+            important={post.important}
           >
-            <AnnouncementHeader>
-              <AnnouncementTitle>{announcement.title}</AnnouncementTitle>
-              <AnnouncementMeta>
+            <PostHeader>
+              <PostTitle>{post.title}</PostTitle>
+              <PostMeta>
                 <span>
-                  {announcement.publishDate}에 {announcement.author}이(가) 게시함
-                  {announcement.important && <ImportantBadge>중요</ImportantBadge>}
+                  {post.publishDate}에 {post.author}이(가) 게시함
+                  {post.important && <ImportantBadge>중요</ImportantBadge>}
                 </span>
-              </AnnouncementMeta>
-            </AnnouncementHeader>
-            <AnnouncementBody>
-              <AnnouncementText>{announcement.content}</AnnouncementText>
-            </AnnouncementBody>
-          </AnnouncementCard>
+              </PostMeta>
+            </PostHeader>
+            <PostBody>
+              <PostText>{post.content}</PostText>
+            </PostBody>
+          </PostCard>
         ))
       )}
     </div>
   );
 };
 
-export default UserAnnouncements;
+export default UserPosts;
