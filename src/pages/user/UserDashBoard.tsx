@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import ClubInfo from './ClubInfo';
-import UserAnnouncements from './UserAnnouncements';
+import UserAnnouncements from './UserPosts';
 import UserEvents from './UserEvents';
 import UserChat from './UserChat';
 

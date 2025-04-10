@@ -1,5 +1,5 @@
 // src/services/api.ts
-import { Club, Member, Announcement, Event, Message, User } from '../types';
+import { Club, Member, Post, Event, Message, User } from '../types';
 
 // This is a mock API service for development.
 // In a real app, you would use fetch or axios to make real API calls.
@@ -105,11 +105,11 @@ export const api = {
   
   // And so on for other API calls...
   
-  // Announcements
-  getAnnouncements: async (clubId?: number): Promise<Announcement[]> => {
+  // Posts
+  getPosts: async (clubId?: number): Promise<Post[]> => {
     await delay(800);
     
-    const announcements = [
+    const posts = [
       { 
         id: 1, 
         title: 'Photography Exhibition Next Month', 
@@ -142,7 +142,7 @@ export const api = {
       },
     ];
     
-    return clubId ? announcements.filter(announcement => announcement.clubId === clubId) : announcements;
+    return clubId ? posts.filter(post => post.clubId === clubId) : posts;
   },
   
   // Events

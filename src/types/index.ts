@@ -17,7 +17,7 @@ export interface Club {
     clubName: string;
   }
   
-  export interface Announcement {
+  export interface Post {
     id: number;
     title: string;
     content: string;
