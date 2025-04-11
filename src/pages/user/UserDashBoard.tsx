@@ -5,6 +5,194 @@ import UserAnnouncements from './UserPosts';
 import UserEvents from './UserEvents';
 import UserChat from './UserChat';
 
+interface HomeTabProps {
+  userClub: {
+    id: number;
+    name: string;
+    memberCount: number;
+    joinDate: string;
+    role: string;
+  };
+  setActiveTab: (tab: string) => void;
+}
+
+const HomeTab: React.FC<HomeTabProps> = ({ userClub, setActiveTab }) => {
+  // Mock data for the home tab
+  const recentAnnouncements = [
+    { 
+      id: 1, 
+      title: 'Photography Exhibition Next Month', 
+      publishDate: '2023-05-10',
+      important: true 
+    },
+  ];
+  
+  const upcomingEvents = [
+    { 
+      id: 1, 
+      title: 'Photography Workshop', 
+      startDate: '2023-06-05', 
+      startTime: '14:00',
+      location: 'Arts Building, Room A203'
+    },
+  ];
+
+  return (
+    <HomeContainer>
+      <WelcomeTitle>반갑습니다, Kim Min-ji님!</WelcomeTitle>
+      
+      <WidgetsGrid>
+        <Widget>
+          <WidgetHeader>
+            <WidgetTitle>동아리 정보</WidgetTitle>
+            <LinkButton onClick={() => {}}>회원 보기</LinkButton>
+          </WidgetHeader>
+          <WidgetBody>
+            <ClubInfo clubId={userClub.id} />
+          </WidgetBody>
+        </Widget>
+        
+        <Widget>
+          <WidgetHeader>
+            <WidgetTitle>최근 공지사항</WidgetTitle>
+            <LinkButton onClick={() => setActiveTab('announcements')}>모두 보기</LinkButton>
+          </WidgetHeader>
+          <WidgetBody>
+            {recentAnnouncements.length > 0 ? (
+              <QuickList>
+                {recentAnnouncements.map(announcement => (
+                  <QuickListItem key={announcement.id} important={announcement.important}>
+                    <ItemTitle>{announcement.title}</ItemTitle>
+                    <ItemMeta>{announcement.publishDate}</ItemMeta>
+                  </QuickListItem>
+                ))}
+              </QuickList>
+            ) : (
+              <EmptyMessage>최근 공지사항이 없습니다</EmptyMessage>
+            )}
+          </WidgetBody>
+        </Widget>
+        
+        <Widget>
+          <WidgetHeader>
+            <WidgetTitle>예정된 일정</WidgetTitle>
+            <LinkButton onClick={() => setActiveTab('events')}>모두 보기</LinkButton>
+          </WidgetHeader>
+          <WidgetBody>
+            {upcomingEvents.length > 0 ? (
+              <QuickList>
+                {upcomingEvents.map(event => (
+                  <QuickListItem key={event.id}>
+                    <ItemTitle>{event.title}</ItemTitle>
+                    <EventDetails>
+                      <ItemMeta>{event.startDate} {event.startTime}</ItemMeta>
+                      <ItemMeta>{event.location}</ItemMeta>
+                    </EventDetails>
+                  </QuickListItem>
+                ))}
+              </QuickList>
+            ) : (
+              <EmptyMessage>예정된 일정이 없습니다</EmptyMessage>
+            )}
+          </WidgetBody>
+        </Widget>
+        
+        <Widget>
+          <WidgetHeader>
+            <WidgetTitle>최근 활동</WidgetTitle>
+          </WidgetHeader>
+          <WidgetBody>
+            <ActivityList>
+              <ActivityItem>
+                <ActivityIcon>💬</ActivityIcon>
+                <ActivityContent>
+                  <ActivityText>동아리 채팅에 새 메시지</ActivityText>
+                  <ActivityTime>10분 전</ActivityTime>
+                </ActivityContent>
+              </ActivityItem>
+              <ActivityItem>
+                <ActivityIcon>📅</ActivityIcon>
+                <ActivityContent>
+                  <ActivityText>사진 워크샵 일정이 등록되었습니다</ActivityText>
+                  <ActivityTime>2시간 전</ActivityTime>
+                </ActivityContent>
+              </ActivityItem>
+              <ActivityItem>
+                <ActivityIcon>👤</ActivityIcon>
+                <ActivityContent>
+                  <ActivityText>2명의 신규 회원이 가입했습니다</ActivityText>
+                  <ActivityTime>어제</ActivityTime>
+                </ActivityContent>
+              </ActivityItem>
+            </ActivityList>
+          </WidgetBody>
+        </Widget>
+      </WidgetsGrid>
+    </HomeContainer>
+  );
+};
+
+const UserDashboard: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('home');
+  const [userClub, setUserClub] = useState({
+    id: 1,
+    name: 'Photography Club',
+    memberCount: 25,
+    joinDate: '2023-03-15',
+    role: 'Member'
+  });
+
+  return (
+    <DashboardContainer>
+      <Sidebar>
+        <UserProfile>
+          <Avatar>
+            <AvatarPlaceholder>KM</AvatarPlaceholder>
+          </Avatar>
+          <UserName>Kim Min-ji</UserName>
+          <UserClub>{userClub.name}</UserClub>
+          <UserRole>{userClub.role}</UserRole>
+        </UserProfile>
+        <UserMenu>
+          <MenuItem 
+            active={activeTab === 'home'} 
+            onClick={() => setActiveTab('home')}
+          >
+            홈
+          </MenuItem>
+          <MenuItem 
+            active={activeTab === 'announcements'} 
+            onClick={() => setActiveTab('announcements')}
+          >
+            공지사항
+          </MenuItem>
+          <MenuItem 
+            active={activeTab === 'events'} 
+            onClick={() => setActiveTab('events')}
+          >
+            일정
+          </MenuItem>
+          <MenuItem 
+            active={activeTab === 'chat'} 
+            onClick={() => setActiveTab('chat')}
+          >
+            동아리 채팅
+          </MenuItem>
+        </UserMenu>
+      </Sidebar>
+      <Content>
+        {activeTab === 'home' && <HomeTab userClub={userClub} setActiveTab={setActiveTab} />}
+        {activeTab === 'announcements' && <UserAnnouncements clubId={userClub.id} />}
+        {activeTab === 'events' && <UserEvents clubId={userClub.id} />}
+        {activeTab === 'chat' && <UserChat clubId={userClub.id} clubName={userClub.name} />}
+      </Content>
+    </DashboardContainer>
+  );
+};
+
+export default UserDashboard;
+
+
 const DashboardContainer = styled.div`
   display: flex;
   height: calc(100vh - 120px);
@@ -219,190 +407,3 @@ const EmptyMessage = styled.p`
   font-style: italic;
   text-align: center;
 `;
-
-interface HomeTabProps {
-  userClub: {
-    id: number;
-    name: string;
-    memberCount: number;
-    joinDate: string;
-    role: string;
-  };
-  setActiveTab: (tab: string) => void;
-}
-
-const HomeTab: React.FC<HomeTabProps> = ({ userClub, setActiveTab }) => {
-  // Mock data for the home tab
-  const recentAnnouncements = [
-    { 
-      id: 1, 
-      title: 'Photography Exhibition Next Month', 
-      publishDate: '2023-05-10',
-      important: true 
-    },
-  ];
-  
-  const upcomingEvents = [
-    { 
-      id: 1, 
-      title: 'Photography Workshop', 
-      startDate: '2023-06-05', 
-      startTime: '14:00',
-      location: 'Arts Building, Room A203'
-    },
-  ];
-
-  return (
-    <HomeContainer>
-      <WelcomeTitle>반갑습니다, Kim Min-ji님!</WelcomeTitle>
-      
-      <WidgetsGrid>
-        <Widget>
-          <WidgetHeader>
-            <WidgetTitle>동아리 정보</WidgetTitle>
-            <LinkButton onClick={() => {}}>회원 보기</LinkButton>
-          </WidgetHeader>
-          <WidgetBody>
-            <ClubInfo clubId={userClub.id} />
-          </WidgetBody>
-        </Widget>
-        
-        <Widget>
-          <WidgetHeader>
-            <WidgetTitle>최근 공지사항</WidgetTitle>
-            <LinkButton onClick={() => setActiveTab('announcements')}>모두 보기</LinkButton>
-          </WidgetHeader>
-          <WidgetBody>
-            {recentAnnouncements.length > 0 ? (
-              <QuickList>
-                {recentAnnouncements.map(announcement => (
-                  <QuickListItem key={announcement.id} important={announcement.important}>
-                    <ItemTitle>{announcement.title}</ItemTitle>
-                    <ItemMeta>{announcement.publishDate}</ItemMeta>
-                  </QuickListItem>
-                ))}
-              </QuickList>
-            ) : (
-              <EmptyMessage>최근 공지사항이 없습니다</EmptyMessage>
-            )}
-          </WidgetBody>
-        </Widget>
-        
-        <Widget>
-          <WidgetHeader>
-            <WidgetTitle>예정된 일정</WidgetTitle>
-            <LinkButton onClick={() => setActiveTab('events')}>모두 보기</LinkButton>
-          </WidgetHeader>
-          <WidgetBody>
-            {upcomingEvents.length > 0 ? (
-              <QuickList>
-                {upcomingEvents.map(event => (
-                  <QuickListItem key={event.id}>
-                    <ItemTitle>{event.title}</ItemTitle>
-                    <EventDetails>
-                      <ItemMeta>{event.startDate} {event.startTime}</ItemMeta>
-                      <ItemMeta>{event.location}</ItemMeta>
-                    </EventDetails>
-                  </QuickListItem>
-                ))}
-              </QuickList>
-            ) : (
-              <EmptyMessage>예정된 일정이 없습니다</EmptyMessage>
-            )}
-          </WidgetBody>
-        </Widget>
-        
-        <Widget>
-          <WidgetHeader>
-            <WidgetTitle>최근 활동</WidgetTitle>
-          </WidgetHeader>
-          <WidgetBody>
-            <ActivityList>
-              <ActivityItem>
-                <ActivityIcon>💬</ActivityIcon>
-                <ActivityContent>
-                  <ActivityText>동아리 채팅에 새 메시지</ActivityText>
-                  <ActivityTime>10분 전</ActivityTime>
-                </ActivityContent>
-              </ActivityItem>
-              <ActivityItem>
-                <ActivityIcon>📅</ActivityIcon>
-                <ActivityContent>
-                  <ActivityText>사진 워크샵 일정이 등록되었습니다</ActivityText>
-                  <ActivityTime>2시간 전</ActivityTime>
-                </ActivityContent>
-              </ActivityItem>
-              <ActivityItem>
-                <ActivityIcon>👤</ActivityIcon>
-                <ActivityContent>
-                  <ActivityText>2명의 신규 회원이 가입했습니다</ActivityText>
-                  <ActivityTime>어제</ActivityTime>
-                </ActivityContent>
-              </ActivityItem>
-            </ActivityList>
-          </WidgetBody>
-        </Widget>
-      </WidgetsGrid>
-    </HomeContainer>
-  );
-};
-
-const UserDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('home');
-  const [userClub, setUserClub] = useState({
-    id: 1,
-    name: 'Photography Club',
-    memberCount: 25,
-    joinDate: '2023-03-15',
-    role: 'Member'
-  });
-
-  return (
-    <DashboardContainer>
-      <Sidebar>
-        <UserProfile>
-          <Avatar>
-            <AvatarPlaceholder>KM</AvatarPlaceholder>
-          </Avatar>
-          <UserName>Kim Min-ji</UserName>
-          <UserClub>{userClub.name}</UserClub>
-          <UserRole>{userClub.role}</UserRole>
-        </UserProfile>
-        <UserMenu>
-          <MenuItem 
-            active={activeTab === 'home'} 
-            onClick={() => setActiveTab('home')}
-          >
-            홈
-          </MenuItem>
-          <MenuItem 
-            active={activeTab === 'announcements'} 
-            onClick={() => setActiveTab('announcements')}
-          >
-            공지사항
-          </MenuItem>
-          <MenuItem 
-            active={activeTab === 'events'} 
-            onClick={() => setActiveTab('events')}
-          >
-            일정
-          </MenuItem>
-          <MenuItem 
-            active={activeTab === 'chat'} 
-            onClick={() => setActiveTab('chat')}
-          >
-            동아리 채팅
-          </MenuItem>
-        </UserMenu>
-      </Sidebar>
-      <Content>
-        {activeTab === 'home' && <HomeTab userClub={userClub} setActiveTab={setActiveTab} />}
-        {activeTab === 'announcements' && <UserAnnouncements clubId={userClub.id} />}
-        {activeTab === 'events' && <UserEvents clubId={userClub.id} />}
-        {activeTab === 'chat' && <UserChat clubId={userClub.id} clubName={userClub.name} />}
-      </Content>
-    </DashboardContainer>
-  );
-};
-
-export default UserDashboard;

@@ -57,13 +57,13 @@ function App() {
   }, []);
 
   // 로그인 처리
-  const handleLogin = (userData: any) => {
+  const handleLogin = (res: any) => {
     // 사용자 정보와 토큰을 로컬 스토리지에 저장
-    localStorage.setItem('club_platform_token', userData.token);
-    localStorage.setItem('club_platform_user', JSON.stringify(userData.user));
+    localStorage.setItem('club_platform_token', res.token);
+    localStorage.setItem('club_platform_user', JSON.stringify(res.user));
     
     setIsLoggedIn(true);
-    setIsAdmin(userData.user.role === 'ADMIN');
+    setIsAdmin(res.user.role === 'ADMIN');
   };
 
   // 로그아웃 처리
@@ -125,7 +125,7 @@ function App() {
           <Route path="/register" element={
             isLoggedIn ? <Navigate to="/" replace /> : <Register />
           } />
-          <Route path="/oauth/callback/:provider" element={<AuthCallback />} />
+          <Route path="/oauth/callback/:provider" element={<AuthCallback onLogin={handleLogin}/>} />
           
           {/* 인증된 사용자용 라우트 */}
           <Route path="/" element={

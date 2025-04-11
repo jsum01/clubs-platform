@@ -13,21 +13,21 @@ const Register: React.FC = () => {
       
       // 구글 회원가입일 경우
       if (provider === 'google') {
-        const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID; console.log("clientId: " + clientId)
-        const redirectUri = `${window.location.origin}/oauth/callback/google`; // 콜백 URL 설정
-        const scope = 'email profile'; // 요청할 권한 범위
+        const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+        const redirectUri = `${window.location.origin}/oauth/callback/google`;
+        const scope = 'email profile';
         // CSRF 방지용 상태 토큰
         const state = Math.random().toString(36).substring(2);
         localStorage.setItem('oauth_state', state);
         // 회원가입임을 나타내는 파라미터 추가
         localStorage.setItem('oauth_signup', 'true');
-        // 구글 OAuth 로그인 페이지로 리다이렉트
-        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}&state=${state}&prompt=select_account`;
+        // 구글 OAuth 로그인 페이지로 리다이렉트 - changed to code flow
+        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&state=${state}&access_type=offline&prompt=select_account`;
         window.location.href = googleAuthUrl;
       } 
       // 카카오 회원가입일 경우
       else if (provider === 'kakao') {
-        const restApiKey = process.env.REACT_APP_KAKAO_REST_API_KEY; console.log("KAKAO_REST_API_KEY: " + restApiKey)
+        const restApiKey = process.env.REACT_APP_KAKAO_REST_API_KEY;
         const redirectUri = `${window.location.origin}/oauth/callback/kakao`;
         // CSRF 방지용 상태 토큰
         const state = Math.random().toString(36).substring(2);

@@ -33,23 +33,24 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       setLoading(true);
       // 구글 로그인일 경우
       if (provider === 'google') {
-        const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID; console.log("clientId: " + clientId)
-        const redirectUri = `${window.location.origin}/oauth/callback/google`; // 콜백 URL
-        const responseType = 'token'
-        const scope = 'email profile'; // 요청할 권한 범위
-        const state = Math.random().toString(36).substring(2); // CSRF 방지용 상태 토큰
+        const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+        const redirectUri = `${window.location.origin}/oauth/callback/google`;
+        console.log("리다이렉트 URL: ", redirectUri)
+        const responseType = 'token';
+        const scope = 'email profile';
+        const state = Math.random().toString(36).substring(2);
         localStorage.setItem('oauth_state', state);
-        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=${responseType}&scope=${encodeURIComponent(scope)}`;
-        window.location.href = googleAuthUrl; // 구글 OAuth 로그인 페이지로 리다이렉트
+        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=${responseType}&scope=${encodeURIComponent(scope)}&state=${state}&prompt=consent`;
+        window.location.href = googleAuthUrl;
       } 
       // 카카오 로그인일 경우
       else if (provider === 'kakao') {
-        const restApiKey = process.env.REACT_APP_KAKAO_REST_API_KEY; console.log("KAKAO_REST_API_KEY: " + restApiKey)
-        const redirectUri = `${window.location.origin}/oauth/callback/kakao`;// 콜백 URL
-        const state = Math.random().toString(36).substring(2); // CSRF 방지용 상태 토큰
+        const restApiKey = process.env.REACT_APP_KAKAO_REST_API_KEY;
+        const redirectUri = `${window.location.origin}/oauth/callback/kakao`;
+        const state = Math.random().toString(36).substring(2);
         localStorage.setItem('oauth_state', state);
         const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${restApiKey}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&state=${state}`;
-        window.location.href = kakaoAuthUrl; // 카카오 OAuth 로그인 페이지로 리다이렉트
+        window.location.href = kakaoAuthUrl;
       }
     } catch (err: any) {
       setError(err.message || `${provider} 로그인 중 오류가 발생했습니다.`);
@@ -93,7 +94,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
 export default Login;
 
-// 스타일드 컴포넌트 (파일 하단에 배치)
+// Styled components remain the same
 const Container = styled.div`
   display: flex;
   justify-content: center;
